@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+<Import Project="$([System.IO.Path]::Combine($([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'eels.props')),'eels.props'))" />
+
+<ItemGroup>
+  <EelsSolution Include="$(EelsBuildDir)\eels.sln" />
+</ItemGroup>
+
+<ItemGroup>
+  <EelsPlatformToolset Include="v120" />
+</ItemGroup>
+
+<ItemGroup>
+  <EelsPlatform Include="win32" />
+  <EelsPlatform Include="x64" />
+</ItemGroup>
+
+<ItemGroup>
+  <EelsConfiguration Include="debug" />
+  <EelsConfiguration Include="release" />
+</ItemGroup>
+
+<Target Name="EelsGetProjects" Outputs="@(EelsProject)">
+  <ItemGroup>
+    <_EelsProjectProp0 Include="@(EelsConfiguration)">
+      <Configuration>%(EelsConfiguration.Identity)</Configuration>
+    </_EelsProjectProp0>
+  </ItemGroup>
+  <ItemGroup>
+    <_EelsProjectProp1 Include="@(_EelsProjectProp0)">
+      <Platform>%(EelsPlatform.Identity)</Platform>
+    </_EelsProjectProp1>
+  </ItemGroup>
+  <ItemGroup>
+    <_EelsProjectProp2 Include="@(_EelsProjectProp1)">
+      <PlatformToolset>%(EelsPlatformToolset.Identity)</PlatformToolset>
+    </_EelsProjectProp2>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EelsProject Include="@(EelsSolution)">
+      <Properties>
+        Configuration=%(_EelsProjectProp2.Configuration);
+        Platform=%(_EelsProjectProp2.Platform);
+        PlatformToolset=%(_EelsProjectProp2.PlatformToolset)
+      </Properties>
+    </EelsProject>
+  </ItemGroup>
+</Target>
+
+<Target Name="Build" DependsOnTargets="EelsGetProjects">
+  <!-- 'BuildInParallel' induces errors due to projects being included in multiple solutions -->
+  <MSBuild BuildInParallel="false" Projects="@(EelsProject)" Targets="Build" />
+</Target>
+
+</Project>

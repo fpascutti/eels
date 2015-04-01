@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!-- $(IntDir) must end with a slash else it causes a build warning-->
+    <IntDir>$(EelsRootDir)\obj\$(ProjectName)\$(PlatformToolset.ToLowerInvariant())\$(Platform.ToLowerInvariant())\$(Configuration.ToLowerInvariant())\</IntDir>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <AdditionalIncludeDirectories>$(EelsBuildDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)%(RelativeDir)\%(Filename)%(Extension).obj</ObjectFileName>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+    </Link>
+    <Lib>
+      <TreatLibWarningAsErrors>true</TreatLibWarningAsErrors>
+    </Lib>
+    <Manifest>
+      <AssemblyIdentity>$(TargetName), type=win32, language=neutral, version=$(EelsVersionMajor).$(EelsVersionMinor).0.0, processorArchitecture=$(EelsProcessorArchitecture)</AssemblyIdentity>
+    </Manifest>
+    <ResourceCompile>
+      <PreprocessorDefinitions>
+        EELS_VERSION_TYPE=$(EelsVersionType);
+        EELS_VERSION_PACKAGETIMESTAMP=$(EelsVersionPackageTimestamp);
+        EELS_VERSION_COMPILATIONTIMESTAMP=$([System.DateTime]::Now.ToUniversalTime().ToString("u"));
+        EELS_VERSION_USERNAME=$(USERDOMAIN)\$(USERNAME);
+        EELS_VERSION_COMPUTERNAME=$(COMPUTERNAME);
+        EELS_VERSION_MAJOR=$(EelsVersionMajor);
+        EELS_VERSION_MINOR=$(EelsVersionMinor);
+        EELS_VERSION_REVISION=$(EelsVersionRevision);
+        EELS_VERSION_TARGETNAME=$(TargetFileName);
+        EELS_VERSION_FILEDESC=$(EelsVersionFileDesc);
+        EELS_VERSION_PLATFORMTOOLSET=$(PlatformToolset.ToLowerInvariant());
+        EELS_VERSION_PLATFORM=$(Platform.ToLowerInvariant());
+        EELS_VERSION_CONFIGURATION=$(Configuration.ToLowerInvariant());
+        %(PreprocessorDefinitions)
+      </PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(EelsVersionDependencies)'!=''">
+        EELS_VERSION_DEPENDENCIES=$(EelsVersionDependencies.TrimEnd('\r_\n'.Split('_')));
+        %(PreprocessorDefinitions)
+      </PreprocessorDefinitions>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+
+  <Import Project="$(EelsMSBuildDir)\configurations\$(Configuration.ToLowerInvariant())\properties.props"/>
+  <Import Project="$(EelsMSBuildDir)\platforms\$(Platform.ToLowerInvariant())\properties.props"/>
+  <Import Project="$(EelsMSBuildDir)\toolsets\$(PlatformToolset.ToLowerInvariant())\properties.props"/>
+
+</Project>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <Import Project="$(EelsMSBuildDir)\configuration.props" />
+
+  <PropertyGroup Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <EelsInstallDependencies>true</EelsInstallDependencies>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <PropertyGroup>
+    <!-- $(OutDir) must end with a slash else it causes a build warning-->
+    <OutDir>$(EelsRootDir)\tests\$(PlatformToolset.ToLowerInvariant())\$(Platform.ToLowerInvariant())\$(Configuration.ToLowerInvariant())\</OutDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LocalDebuggerCommandArguments>--gtest_filter=* --gtest_shuffle=0 --gtest_random_seed=0 --gtest_also_run_disabled_tests=0 --gtest_catch_exceptions=0</LocalDebuggerCommandArguments>
+  </PropertyGroup>
+
+  <Import Project="$(EelsMSBuildDir)\properties.props" />
+  <Import Project="$(EelsMSBuildDir)\dependencies.props" />
+
+  <ItemDefinitionGroup>
+    <Link>
+      <SubSystem>Console</SubSystem>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemGroup>
+    <ResourceCompile Include="$(EelsBuildDir)\version.rc" />
+  </ItemGroup>
+
+</Project>

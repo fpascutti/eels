@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="debug|win32">
+      <Configuration>debug</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release|win32">
+      <Configuration>release</Configuration>
+      <Platform>win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="debug|x64">
+      <Configuration>debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="release|x64">
+      <Configuration>release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectName>expected</ProjectName>
+    <ProjectGuid>{F10EBFB6-0DA2-45C6-BBDA-1B0A9AA6E44F}</ProjectGuid>
+    <EelsVersionFileDesc>Eels - Tests for 'expected' library</EelsVersionFileDesc>
+    <EelsDependencies>googlemock</EelsDependencies>
+  </PropertyGroup>
+  <Import Project="$([System.IO.Path]::Combine($([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'eels.props')),'eels.props'))" />
+  <Import Project="$(EelsMSBuildDir)\test.proj" />
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <EelsVersionType Condition="'$(EelsVersionType)' == ''">D</EelsVersionType>
+    <EelsVersionMajor>1</EelsVersionMajor>
+    <EelsVersionMinor>0</EelsVersionMinor>
+    <EelsVersionRevision Condition="'$(EelsVersionRevision)' == ''">0</EelsVersionRevision>
+    <EelsVersionPackageTimestamp Condition="'$(EelsVersionPackageTimestamp)' == ''">$([System.DateTime]::Now.ToUniversalTime().ToString("u"));</EelsVersionPackageTimestamp>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <EelsBuildDir>$(MSBuildThisFileDirectory)</EelsBuildDir>
+    <EelsBuildDir Condition="HasTrailingSlash($(EelsBuildDir))">$(EelsBuildDir.Remove($([MSBuild]::Subtract($(EelsBuildDir.Length), 1))))</EelsBuildDir>
+
+    <EelsRootDir Condition="'$(EelsRootDir)' == ''">$([System.IO.Directory]::GetParent($(EelsBuildDir)).get_FullName())</EelsRootDir>
+    <EelsRootDir Condition="HasTrailingSlash($(EelsRootDir))">$(EelsRootDir.Remove($([MSBuild]::Subtract($(EelsRootDir.Length), 1))))</EelsRootDir>
+
+    <EelsMSBuildDir>$([System.IO.Path]::Combine($(EelsBuildDir),"msbuild"))</EelsMSBuildDir>
+    <EelsMSBuildDir Condition="HasTrailingSlash($(EelsMSBuildDir))">$(EelsMSBuildDir.Remove($([MSBuild]::Subtract($(EelsMSBuildDir.Length), 1))))</EelsMSBuildDir>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(PlatformToolset)'==''">
+    <!-- Properly set 'PlatformToolset' property based on the Visual Studio version used -->
+    <PlatformToolset>v$(VisualStudioVersion.Replace('.',''))</PlatformToolset>
+  </PropertyGroup>
+
+</Project>
