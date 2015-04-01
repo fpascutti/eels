@@ -4,7 +4,7 @@
 #include <type_traits>
 #include <utility>
 
-#if defined(EELS_EXPECTED_NO_CXX11_INLINE_NAMESPACES)
+#if defined(EELS_NO_CXX11_INLINE_NAMESPACES)
 namespace eels { namespace expected_v1 { namespace detail {
 #else
 namespace eels { inline namespace expected_v1 { namespace detail {
@@ -39,7 +39,7 @@ public:
     void switch_fromto(FromT& from, ToT& to, ArgsT&&... args)
     { from.destruct(); to.construct(std::forward<ArgsT>(args)...); }
 private:
-    static EELS_EXPECTED_CXX11_CONSTEXPR_OR_CONST std::size_t size = sizeof(value_type) > sizeof(error_type) ? sizeof(value_type) : sizeof(error_type);
+    static EELS_CXX11_CONSTEXPR_OR_CONST std::size_t size = sizeof(value_type) > sizeof(error_type) ? sizeof(value_type) : sizeof(error_type);
 	typename std::aligned_union<size, value_type, error_type >::type data_;
 };
 

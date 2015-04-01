@@ -28,6 +28,7 @@
   <Import Project="$(EelsMSBuildDir)\test.proj" />
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="type_traits.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
 </Project>

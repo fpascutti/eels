@@ -3,7 +3,7 @@
 
 #include <tuple>
 
-#if defined(EELS_EXPECTED_NO_CXX11_INLINE_NAMESPACES)
+#if defined(EELS_NO_CXX11_INLINE_NAMESPACES)
 namespace eels { namespace expected_v1 { namespace detail {
 #else
 namespace eels { inline namespace expected_v1 { namespace detail {

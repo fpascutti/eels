@@ -6,12 +6,12 @@
 #include <tuple>
 #include <type_traits>
 #include <utility>
-#include <eels/expected/config.h>
+#include <eels/config.h>
 #include <eels/expected/tags.h>
 #include <eels/expected/detail/buffer.h>
 #include <eels/expected/detail/tuple_indices.h>
 
-#if defined(EELS_EXPECTED_NO_CXX11_INLINE_NAMESPACES)
+#if defined(EELS_NO_CXX11_INLINE_NAMESPACES)
 namespace eels { namespace expected_v1 { namespace detail {
 #else
 namespace eels { inline namespace expected_v1 { namespace detail {
@@ -30,32 +30,32 @@ private:
 
 public:
 	template<typename... ArgsT>
-	EELS_EXPECTED_CXX14_CONSTEXPR void construct(ArgsT&&... args)
+	EELS_CXX14_CONSTEXPR void construct(ArgsT&&... args)
 	{ ::new(storage()) value_type(std::forward<ArgsT>(args)...); }
 
-	EELS_EXPECTED_CXX14_CONSTEXPR void construct(const value_type& val)
+	EELS_CXX14_CONSTEXPR void construct(const value_type& val)
 	{ ::new(storage()) value_type(val); }
 
-	EELS_EXPECTED_CXX14_CONSTEXPR void construct(value_type&& val)
+	EELS_CXX14_CONSTEXPR void construct(value_type&& val)
 	{ ::new(storage()) value_type(std::move(val)); }
 
-	EELS_EXPECTED_CXX14_CONSTEXPR void destruct()
+	EELS_CXX14_CONSTEXPR void destruct()
 	{ get().~value_type(); }
 
-	EELS_EXPECTED_CXX14_CONSTEXPR void assign(const value_type& val)
+	EELS_CXX14_CONSTEXPR void assign(const value_type& val)
 	{ get() = val; }
 
-	EELS_EXPECTED_CXX14_CONSTEXPR void assign(value_type&& val)
+	EELS_CXX14_CONSTEXPR void assign(value_type&& val)
 	{ get() = std::move(val); }
 
-#if defined(EELS_EXPECTED_NO_CXX11_REF_QUALIFIERS)
-    EELS_EXPECTED_CXX14_CONSTEXPR value_type& get() { return *reinterpret_cast<value_type*>(storage()); }
-    EELS_EXPECTED_CXX14_CONSTEXPR const value_type& get() const { return *reinterpret_cast<const value_type*>(storage()); }
+#if defined(EELS_NO_CXX11_REF_QUALIFIERS)
+    EELS_CXX14_CONSTEXPR value_type& get() { return *reinterpret_cast<value_type*>(storage()); }
+    EELS_CXX14_CONSTEXPR const value_type& get() const { return *reinterpret_cast<const value_type*>(storage()); }
 #else
-    EELS_EXPECTED_CXX14_CONSTEXPR value_type& get() & { return *reinterpret_cast<value_type*>(storage()); }
-    EELS_EXPECTED_CXX14_CONSTEXPR const value_type& get() const& { return *reinterpret_cast<const value_type*>(storage()); }
-    EELS_EXPECTED_CXX14_CONSTEXPR value_type&& get() && { return *reinterpret_cast<value_type*>(storage()); }
-#endif // EELS_EXPECTED_REFQUALIFIERS
+    EELS_CXX14_CONSTEXPR value_type& get() & { return *reinterpret_cast<value_type*>(storage()); }
+    EELS_CXX14_CONSTEXPR const value_type& get() const& { return *reinterpret_cast<const value_type*>(storage()); }
+    EELS_CXX14_CONSTEXPR value_type&& get() && { return *reinterpret_cast<value_type*>(storage()); }
+#endif // EELS_REFQUALIFIERS
 
 private:
 	void* storage() { return static_cast<typename storage_type::buffer_type*>(static_cast<storage_type*>(this))->template get<tag_type>(); }
@@ -80,13 +80,13 @@ protected:
 
 public:
 	// default, copy and move constructors
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base()
+	EELS_CXX14_CONSTEXPR storage_base()
 		: is_valid_(false)
 	{
 		error_access_type::construct();
 	}
 
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base(const storage_base<value_type, error_type>& other)
+	EELS_CXX14_CONSTEXPR storage_base(const storage_base<value_type, error_type>& other)
 		: is_valid_(other.valid())
 	{
 		if(valid())
@@ -95,7 +95,7 @@ public:
 			error_access_type::construct(other.error());
 	}
 
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base(storage_base<value_type, error_type>&& other)
+	EELS_CXX14_CONSTEXPR storage_base(storage_base<value_type, error_type>&& other)
 		: is_valid_(other.valid())
 	{
 		if(valid())
@@ -105,12 +105,12 @@ public:
 	}
 
 	// value constructors
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base(const value_type& val)
+	EELS_CXX14_CONSTEXPR storage_base(const value_type& val)
 		: is_valid_(true)
 	{
 		value_access_type::construct(val);
 	}
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base(value_type&& val)
+	EELS_CXX14_CONSTEXPR storage_base(value_type&& val)
 		: is_valid_(true)
 	{
 		value_access_type::construct(std::move(val));
@@ -118,7 +118,7 @@ public:
 
 	// in_place constructors
 	template<typename... ArgsT>
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base(in_place_t, ArgsT&&... args)
+	EELS_CXX14_CONSTEXPR storage_base(in_place_t, ArgsT&&... args)
 		: is_valid_(true)
 	{
 		value_access_type::construct(std::forward<ArgsT>(args)...);
@@ -126,7 +126,7 @@ public:
 
 	// unexpected constructors
 	template<typename... ArgsT>
-	EELS_EXPECTED_CXX14_CONSTEXPR storage_base(unexpected_t, ArgsT&&... args)
+	EELS_CXX14_CONSTEXPR storage_base(unexpected_t, ArgsT&&... args)
 		: is_valid_(false)
 	{
 		error_access_type::construct(std::forward<ArgsT>(args)...);
@@ -223,25 +223,25 @@ public:
     }
     
     // observers
-	EELS_EXPECTED_CXX14_CONSTEXPR bool valid() const { return is_valid_; }
+	EELS_CXX14_CONSTEXPR bool valid() const { return is_valid_; }
 
-#if defined(EELS_EXPECTED_NO_CXX11_REF_QUALIFIERS)
-    EELS_EXPECTED_CXX14_CONSTEXPR value_type& value() { assert(valid());  return value_access_type::get(); }
-    EELS_EXPECTED_CXX14_CONSTEXPR const value_type& value() const { assert(valid());  return value_access_type::get(); }
+#if defined(EELS_NO_CXX11_REF_QUALIFIERS)
+    EELS_CXX14_CONSTEXPR value_type& value() { assert(valid());  return value_access_type::get(); }
+    EELS_CXX14_CONSTEXPR const value_type& value() const { assert(valid());  return value_access_type::get(); }
 #else
-    EELS_EXPECTED_CXX14_CONSTEXPR value_type& value() & { assert(valid());  return value_access_type::get(); }
-    EELS_EXPECTED_CXX14_CONSTEXPR const value_type& value() const& { assert(valid());  return value_access_type::get(); }
-    EELS_EXPECTED_CXX14_CONSTEXPR value_type&& value() && { assert(valid());  return value_access_type::get(); }
-#endif // EELS_EXPECTED_REFQUALIFIERS
+    EELS_CXX14_CONSTEXPR value_type& value() & { assert(valid());  return value_access_type::get(); }
+    EELS_CXX14_CONSTEXPR const value_type& value() const& { assert(valid());  return value_access_type::get(); }
+    EELS_CXX14_CONSTEXPR value_type&& value() && { assert(valid());  return value_access_type::get(); }
+#endif // EELS_REFQUALIFIERS
 
-#if defined(EELS_EXPECTED_NO_CXX11_REF_QUALIFIERS)
-    EELS_EXPECTED_CXX14_CONSTEXPR error_type& error() { assert(!valid());  return error_access_type::get(); }
-    EELS_EXPECTED_CXX14_CONSTEXPR const error_type& error() const { assert(!valid());  return error_access_type::get(); }
+#if defined(EELS_NO_CXX11_REF_QUALIFIERS)
+    EELS_CXX14_CONSTEXPR error_type& error() { assert(!valid());  return error_access_type::get(); }
+    EELS_CXX14_CONSTEXPR const error_type& error() const { assert(!valid());  return error_access_type::get(); }
 #else
-    EELS_EXPECTED_CXX14_CONSTEXPR error_type& error() & { assert(!valid());  return error_access_type::get(); }
-    EELS_EXPECTED_CXX14_CONSTEXPR const error_type& error() const& { assert(!valid());  return error_access_type::get(); }
-    EELS_EXPECTED_CXX14_CONSTEXPR error_type&& error() && { assert(!valid());  return error_access_type::get(); }
-#endif // EELS_EXPECTED_REFQUALIFIERS
+    EELS_CXX14_CONSTEXPR error_type& error() & { assert(!valid());  return error_access_type::get(); }
+    EELS_CXX14_CONSTEXPR const error_type& error() const& { assert(!valid());  return error_access_type::get(); }
+    EELS_CXX14_CONSTEXPR error_type&& error() && { assert(!valid());  return error_access_type::get(); }
+#endif // EELS_REFQUALIFIERS
 
 private:
 	bool is_valid_;
@@ -255,31 +255,31 @@ private:
     typedef storage_base<ValueT, ErrorT> base_type;
 
 public:
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage()
+    EELS_CXX14_CONSTEXPR trivial_storage()
         : base_type()
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(const trivial_storage<value_type, error_type>& other)
+    EELS_CXX14_CONSTEXPR trivial_storage(const trivial_storage<value_type, error_type>& other)
         : base_type(other)
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(trivial_storage<value_type, error_type>&& other)
+    EELS_CXX14_CONSTEXPR trivial_storage(trivial_storage<value_type, error_type>&& other)
         : base_type(std::move(other))
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(const value_type& val)
+    EELS_CXX14_CONSTEXPR trivial_storage(const value_type& val)
         : base_type(val)
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(value_type&& val)
+    EELS_CXX14_CONSTEXPR trivial_storage(value_type&& val)
         : base_type(std::move(val))
     { }
     template<typename... ArgsT>
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(in_place_t, ArgsT&&... args)
+    EELS_CXX14_CONSTEXPR trivial_storage(in_place_t, ArgsT&&... args)
         : base_type(in_place, std::forward<ArgsT>(args)...)
     { }
     template<typename... ArgsT>
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(unexpected_t, ArgsT&&... args)
+    EELS_CXX14_CONSTEXPR trivial_storage(unexpected_t, ArgsT&&... args)
         : base_type(unexpected, std::forward<ArgsT>(args)...)
     { }
     template<typename... ArgsT, std::size_t... Indices>
-    EELS_EXPECTED_CXX14_CONSTEXPR trivial_storage(std::tuple<ArgsT...>&& factory, const tuple_indices<Indices...>&)
+    EELS_CXX14_CONSTEXPR trivial_storage(std::tuple<ArgsT...>&& factory, const tuple_indices<Indices...>&)
         : base_type(std::forward<ArgsT>(std::get<Indices>(factory))...)
     { }
 
@@ -323,31 +323,31 @@ private:
     typedef storage_base<ValueT, ErrorT> base_type;
 
 public:
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage()
+    EELS_CXX14_CONSTEXPR nontrivial_storage()
         : base_type()
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(const nontrivial_storage<value_type, error_type>& other)
+    EELS_CXX14_CONSTEXPR nontrivial_storage(const nontrivial_storage<value_type, error_type>& other)
         : base_type(other)
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(nontrivial_storage<value_type, error_type>&& other)
+    EELS_CXX14_CONSTEXPR nontrivial_storage(nontrivial_storage<value_type, error_type>&& other)
         : base_type(std::move(other))
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(const value_type& val)
+    EELS_CXX14_CONSTEXPR nontrivial_storage(const value_type& val)
         : base_type(val)
     { }
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(value_type&& val)
+    EELS_CXX14_CONSTEXPR nontrivial_storage(value_type&& val)
         : base_type(std::move(val))
     { }
     template<typename... ArgsT>
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(in_place_t, ArgsT&&... args)
+    EELS_CXX14_CONSTEXPR nontrivial_storage(in_place_t, ArgsT&&... args)
         : base_type(in_place, std::forward<ArgsT>(args)...)
     { }
     template<typename... ArgsT>
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(unexpected_t, ArgsT&&... args)
+    EELS_CXX14_CONSTEXPR nontrivial_storage(unexpected_t, ArgsT&&... args)
         : base_type(unexpected, std::forward<ArgsT>(args)...)
     { }
     template<typename... ArgsT, std::size_t... Indices>
-    EELS_EXPECTED_CXX14_CONSTEXPR nontrivial_storage(std::tuple<ArgsT...>&& factory, const tuple_indices<Indices...>& )
+    EELS_CXX14_CONSTEXPR nontrivial_storage(std::tuple<ArgsT...>&& factory, const tuple_indices<Indices...>& )
         : base_type(std::forward<ArgsT>(std::get<Indices>(factory))...)
     { }
 
